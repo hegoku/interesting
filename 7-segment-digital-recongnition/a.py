@@ -43,16 +43,16 @@ def feature(img):
 #]
 
 #number_mod=cv2.threshold(cv2.cvtColor(cv2.imread('/Users/jack/Pictures/number/n.bmp'),cv2.COLOR_BGR2GRAY),128,255,cv2.THRESH_BINARY)[1]
-number_mod=cv2.imread('/Users/jack/Pictures/number/n.bmp')
+number_mod=cv2.imread('./number/n.bmp')
 
 #img=cv2.imread('/Users/jack/Pictures/number/n.bmp')
-#img=cv2.imread('/Users/jack/Pictures/FN2V63AD2J.com.tencent.ScreenCapture2/QQ20160317-1.png')
-img=cv2.imread('/Users/jack/Pictures/FN2V63AD2J.com.tencent.ScreenCapture2/QQ20160318-2.png')
-#img=cv2.imread('/Users/jack/Pictures/FN2V63AD2J.com.tencent.ScreenCapture2/QQ20160317-4.png')
-#img=cv2.imread('/Users/jack/Downloads/digitRecognition/photo_2.jpg')
-#img=cv2.imread('/Users/jack/Downloads/digitRecognition/photo_1.jpg')
+#img=cv2.imread('./images/QQ20160317-1.png')
+img=cv2.imread('./images/QQ20160318-1.png')
+#img=cv2.imread('./images/QQ20160317-4.png') #车牌
+#img=cv2.imread('./imagesp/hoto_2.jpg')
+#img=cv2.imread('./images/photo_1.jpg')
 img_gray=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY) #灰度
-img_smooth=cv2.GaussianBlur(img_gray, (21,21), 0) #高斯平滑
+img_smooth=cv2.GaussianBlur(img_gray, (1,21), 0) #高斯平滑,纵向,为了让0,7这种上下连通
 img_equ=img_smooth
 #if( (np.max(img_smooth)-np.min(img_smooth))/255 <=0.3 ):
 #img_equ=cv2.equalizeHist(img_smooth)
