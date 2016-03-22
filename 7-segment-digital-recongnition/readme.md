@@ -9,3 +9,5 @@
 [K Nearest Neighbor 算法](http://coolshell.cn/articles/8052.html)
 
 [OpenCV进阶之路：神经网络识别车牌字符](http://www.cnblogs.com/ronny/p/opencv_road_more_01.html)
+
+[Simple Digit Recognition OCR in OpenCV-Python-knn具体例子](http://stackoverflow.com/questions/9413216/simple-digit-recognition-ocr-in-opencv-python)
