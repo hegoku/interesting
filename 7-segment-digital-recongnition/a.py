@@ -20,14 +20,32 @@ def zhifangtu(img,pos,title):
 	plt.subplot(pos),plt.bar(center, hist, align = 'center', width = width),plt.title(title)
 	return
 
-def feature(img):
-	sum=[0.0,0.0]
-	for i in img:
-		for j in i:
-			sum[0]=sum[0]+1
-			if(j==255):
-				sum[1]=sum[1]+1
-	return sum[1]/sum[0]
+def getContoursRectImage(img):
+	result_img=[]
+	result_hu=[]
+	image, contours, hierarchy = cv2.findContours(img.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+	img=cv2.drawContours(img,contours,-1,(255,0,0),3)
+	for ctr in contours:
+		rect=cv2.boundingRect(ctr)
+		roi = img[rect[1]:rect[3]+rect[1],rect[0]:rect[2]+rect[0]]
+	    width=int(32*rect[2]/rect[3])
+	    roi = cv2.resize(roi, (width, 32), interpolation=cv2.INTER_AREA)
+	    m=cv2.moments(roi)
+	    hm=cv2.HuMoments(m);
+	    result_hu.append(ctr);
+	    result_img.append(roi)
+	#rects = [cv2.boundingRect(ctr) for ctr in contours]
+
+	#for rect in rects:
+	    # Draw the rectangles
+	#    roi = img[rect[1]:rect[3]+rect[1],rect[0]:rect[2]+rect[0]]
+	#    width=int(32*rect[2]/rect[3])
+#	    roi = cv2.resize(roi, (width, 32), interpolation=cv2.INTER_AREA)
+	#    m=cv2.moments(roi)
+	#    hm=cv2.HuMoments(m);
+	#    result_hu.append(hm);
+	#    result_img.append(roi)
+	return [result_img,result_hu]
 
 #number_mod=[
 #	cv2.threshold(cv2.cvtColor(cv2.imread('/Users/jack/Pictures/number/0.jpg'),cv2.COLOR_BGR2GRAY),128,255,cv2.THRESH_BINARY)[1],
@@ -42,17 +60,19 @@ def feature(img):
 #	cv2.threshold(cv2.cvtColor(cv2.imread('/Users/jack/Pictures/number/9.jpg'),cv2.COLOR_BGR2GRAY),128,255,cv2.THRESH_BINARY)[1],
 #]
 
-#number_mod=cv2.threshold(cv2.cvtColor(cv2.imread('/Users/jack/Pictures/number/n.bmp'),cv2.COLOR_BGR2GRAY),128,255,cv2.THRESH_BINARY)[1]
-number_mod=cv2.imread('./number/n.bmp')
+number_mod=cv2.threshold(cv2.cvtColor(cv2.imread('/Users/jack/Pictures/number/n.bmp'),cv2.COLOR_BGR2GRAY),128,255,cv2.THRESH_BINARY)[1]
+#number_mod=cv2.imread('./number/n.bmp')
 
-#img=cv2.imread('/Users/jack/Pictures/number/n.bmp')
+#img=cv2.imread('./number/n.bmp')
 #img=cv2.imread('./images/QQ20160317-1.png')
-img=cv2.imread('./images/QQ20160318-1.png')
+img=cv2.imread('./images/QQ20160318-2.png')
 #img=cv2.imread('./images/QQ20160317-4.png') #车牌
 #img=cv2.imread('./imagesp/hoto_2.jpg')
 #img=cv2.imread('./images/photo_1.jpg')
+width=int(32*len(img[0])/len(img))
+img = cv2.resize(img, (width, 32), interpolation=cv2.INTER_AREA)
 img_gray=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY) #灰度
-img_smooth=cv2.GaussianBlur(img_gray, (1,21), 0) #高斯平滑,纵向,为了让0,7这种上下连通
+img_smooth=cv2.GaussianBlur(img_gray, (1,7), 0) #高斯平滑,纵向,为了让0,7这种上下连通
 img_equ=img_smooth
 #if( (np.max(img_smooth)-np.min(img_smooth))/255 <=0.3 ):
 #img_equ=cv2.equalizeHist(img_smooth)
@@ -70,7 +90,6 @@ else:
 image, contours, hierarchy = cv2.findContours(img_binary.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
 # Get rectangles contains each contour
 rects = [cv2.boundingRect(ctr) for ctr in contours]
-
 
 # For each rectangular region, calculate HOG features and predict
 # the digit using Linear SVM.
@@ -96,11 +115,25 @@ plt.subplot(425),plt.imshow(img,'gray'),plt.title('final')
 plt.figure(2)
 j=1
 for i in number_image:
-	plt.subplot(10,3,j),plt.imshow(i,'gray'),plt.title(str(feature(i)))
+	plt.subplot(10,3,j),plt.imshow(i,'gray')
 	j=j+1
 
 
-#plt.figure(3)
+plt.figure(3)
+j=1
+tmp=getContoursRectImage(number_mod)
+plt.subplot(3,5,12),plt.imshow(number_image[3],'gray')
+m=cv2.moments(number_image[3])
+hm=cv2.HuMoments(m)
+#image,contours,hierarchy = cv2.findContours(number_image[2].copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+#hm=contours[0]
+epsilon = 0.1*cv2.arcLength(contours[0],True)
+hm = cv2.approxPolyDP(contours[0],epsilon,True)
+for i in tmp[0]:
+	plt.subplot(3,5,j),plt.imshow(i,'gray'),plt.title(str(cv2.matchShapes(hm,tmp[1][j-1],2,0.0)))
+	j=j+1
+#print cv2.matchShapes(tmp[1][1],tmp[1][4],1,0.0)
+#print cv2.matchShapes(tmp[1][5],tmp[1][8],1,0.0)
 #plt.subplot(111),plt.imshow(number_mod,'gray')
 
 plt.show()
