@@ -56,21 +56,6 @@ responses = responses.reshape((responses.size,1))
 model = cv2.ml.KNearest_create()
 model.train(samples,cv2.ml.ROW_SAMPLE,responses)
 
-number_mod=[
-	cv2.threshold(cv2.cvtColor(cv2.imread('./number/0.jpg'),cv2.COLOR_BGR2GRAY),128,255,cv2.THRESH_BINARY)[1],
-	cv2.threshold(cv2.cvtColor(cv2.imread('./number/1.jpg'),cv2.COLOR_BGR2GRAY),128,255,cv2.THRESH_BINARY)[1],
-	cv2.threshold(cv2.cvtColor(cv2.imread('./number/2.jpg'),cv2.COLOR_BGR2GRAY),128,255,cv2.THRESH_BINARY)[1],
-	cv2.threshold(cv2.cvtColor(cv2.imread('./number/3.jpg'),cv2.COLOR_BGR2GRAY),128,255,cv2.THRESH_BINARY)[1],
-	cv2.threshold(cv2.cvtColor(cv2.imread('./number/4.jpg'),cv2.COLOR_BGR2GRAY),128,255,cv2.THRESH_BINARY)[1],
-	cv2.threshold(cv2.cvtColor(cv2.imread('./number/5.jpg'),cv2.COLOR_BGR2GRAY),128,255,cv2.THRESH_BINARY)[1],
-	cv2.threshold(cv2.cvtColor(cv2.imread('./number/6.jpg'),cv2.COLOR_BGR2GRAY),128,255,cv2.THRESH_BINARY)[1],
-	cv2.threshold(cv2.cvtColor(cv2.imread('./number/7.jpg'),cv2.COLOR_BGR2GRAY),128,255,cv2.THRESH_BINARY)[1],
-	cv2.threshold(cv2.cvtColor(cv2.imread('./number/8.jpg'),cv2.COLOR_BGR2GRAY),128,255,cv2.THRESH_BINARY)[1],
-	cv2.threshold(cv2.cvtColor(cv2.imread('./number/9.jpg'),cv2.COLOR_BGR2GRAY),128,255,cv2.THRESH_BINARY)[1],
-	cv2.threshold(cv2.cvtColor(cv2.imread('./number/dot.jpg'),cv2.COLOR_BGR2GRAY),128,255,cv2.THRESH_BINARY)[1],
-]
-
-
 img=cv2.imread(sys.argv[1])
 width=int(50*len(img[0])/len(img))
 img = cv2.resize(img, (width, 50), interpolation=cv2.INTER_AREA)
@@ -104,7 +89,7 @@ plt.subplot(421),plt.imshow(img_gray,'gray'),plt.title('gray')
 zhifangtu(img_gray,422,str(np.mean(img_gray)))
 
 plt.subplot(423),plt.imshow(img_smooth,'gray'),plt.title('img_smooth')
-zhifangtu(img,424,str(maxMinAvarge(img_smooth)))
+zhifangtu(img_smooth,424,str(maxMinAvarge(img_gray)))
 
 plt.subplot(425),plt.imshow(img,'gray'),plt.title('final')
 
